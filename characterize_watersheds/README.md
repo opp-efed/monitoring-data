@@ -1,3 +1,10 @@
+Contains the workflow for characterizing the watersheds upstream of sampling points
+
+(4/3/2018) - As of now, most of the scripts are in place but several have not been populated and others have not been tested. Working on getting these going.
+
+
+DIRECTIONS FOR USE
+
 1. Assemble input datasets
 
     a. Pull streamcat data (0_fetch_streamcat.py)

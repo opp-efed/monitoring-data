@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../BiasFactors/.idea/BiasFactors.iml" filepath="$PROJECT_DIR$/../../BiasFactors/.idea/BiasFactors.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../acquire/.idea/acquire.iml" filepath="$PROJECT_DIR$/../acquire/.idea/acquire.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/monitoring-data.iml" filepath="$PROJECT_DIR$/.idea/monitoring-data.iml" />
+    </modules>
+  </component>
+</project>
