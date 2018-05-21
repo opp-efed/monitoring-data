@@ -13,7 +13,6 @@ class StreamCat(object):
 
         self.condense_tables(streamcat_files)
 
-
     def assemble_tables(self):
         from utilities import nhd_states
 
