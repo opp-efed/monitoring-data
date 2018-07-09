@@ -1,0 +1,4 @@
+bin/Sites/*
+bin/Tables/*
+bin/temp/*
+.idea
