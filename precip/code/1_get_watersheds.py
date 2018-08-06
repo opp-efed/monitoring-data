@@ -1,10 +1,9 @@
-import os
 import numpy as np
 import pandas as pd
 
 from collections import defaultdict
 
-from classes import MetfileMatrix, Navigator, nhd_states
+from classes import Navigator, nhd_states
 
 
 class Sites(object):
@@ -38,17 +37,15 @@ class Sites(object):
                 else:
                     print("{} not in watershed".format(comid))
 
+
 def main():
-    sam_dir = r"C:\Users\Trip Hook\Documents\opp-efed\sam"
-    nav_path = os.path.join(sam_dir, "bin", "Preprocessed", "HydroFiles")
-    sites_file = os.path.join("..", "bin", "Tables", "wsda_sites_061418.csv")
-    out_file = os.path.join("..", "bin", "Tables", "wsda_watersheds_061418.csv")
+    from paths import sites_file, nav_path, watershed_file
 
     # Read sites file
     sites = Sites(sites_file, nav_path)
 
     # Delineate watersheds and write to output
-    with open(out_file, 'w') as f:
+    with open(watershed_file, 'w') as f:
         for region, sites in sites.sites.groupby('region'):
             print(region)
             nav = Navigator(region, nav_path)
@@ -56,7 +53,8 @@ def main():
                 upstream_reaches, times, message = nav.upstream_watershed(int(site.comid), return_times=True)
                 for time in sorted(np.unique(times)):
                     active_reaches = upstream_reaches[np.where(times == time)[0]]
-                    f.write("{},{},{},{},{}\n".format(site.site_id, site.comid, region, time, ",".join(map(str, active_reaches))))
+                    f.write("{},{},{},{},{}\n".format(site.site_id, site.comid, region, time,
+                                                      ",".join(map(str, active_reaches))))
 
 
 main()

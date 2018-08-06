@@ -30,16 +30,12 @@ def write_output(output, outfile):
 
 
 def main():
-    # Set paths
-    grid_file = r"C:\Users\Trip Hook\Documents\BiasFactors\Data\weather_stations_highres_thiessens_US_alb\weather_stations_highres_thiessens_US_alb.shp"
-    nhd_dir = r"C:\Users\Trip Hook\Documents\NationalData\NHDPlusV2"
-    watersheds_table = os.path.join("..", "bin", "Tables", "amp_watersheds_061418_2.txt")
-    outfile = os.path.join("..", "bin", "Tables", "amp_061418_grid_props.txt")
+    from paths import grid_file, watershed_file, nhd_dir, grid_props
 
     # Loop through sites, sorted by region
     output = [["Site_ID", "Comid", "Dayshed", "Grid_ID", "Grid_Area"]]
     grid_layer = arcpy.MakeFeatureLayer_management(grid_file, "grid_layer")
-    for region, sites in get_watersheds(watersheds_table):
+    for region, sites in get_watersheds(watershed_file):
         print(region)
         catchment_shapefile = os.path.join(nhd_dir, "NHDPlus{}".format(region), "NHDPlusCatchment", "Catchment.shp")
         catchment_layer = arcpy.MakeFeatureLayer_management(catchment_shapefile, "catch_layer")
@@ -54,7 +50,7 @@ def main():
                 print("Skipping {}, {} for now".format(site_id, time))
         arcpy.Delete_management(catchment_layer)
 
-    write_output(output, outfile)
+    write_output(output, grid_props)
 
 
 main()

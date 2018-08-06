@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import numpy as np
 
@@ -6,14 +5,11 @@ from classes import MetfileMatrix
 
 
 def main():
-    sam_dir = r"C:\Users\Trip Hook\Documents\opp-efed\sam"
-    metfile_path = os.path.join(sam_dir, "bin", "Tables", "WeatherFiles", "metfile")
-    grid_props_table = os.path.join("..", "bin", "Tables", "amp_061418_grid_props.txt")
-    outfile = os.path.join("..", "bin", "Tables", "amp_061418_precip.txt")
+    from paths import metfile_path, grid_props, outfile
 
     met = MetfileMatrix(metfile_path)
 
-    grid_props = pd.read_csv(grid_props_table)
+    grid_props = pd.read_csv(grid_props)
     all_sites = None
     for site_id in np.unique(grid_props.Site_ID):
         print(site_id)
@@ -36,7 +32,7 @@ def main():
             all_sites = precip_series
         else:
             all_sites = pd.concat([all_sites, precip_series])
-        print(site_area)
+
     all_sites.to_csv(outfile)
 
 
