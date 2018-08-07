@@ -13,14 +13,17 @@ def get_watersheds(watersheds_table):
     return sorted(out_dict.items())
 
 
-def get_grid_props(grid_layer, catchment_layer, upstream_reaches):
+def get_grid_props(grid_layer, catchment_layer, upstream_reaches, grid_id_field):
     temp_file = os.path.join("..", "bin", "temp", "clip.shp")
     if os.path.exists(temp_file):
         arcpy.Delete_management(temp_file)
     sel_string = "\"FEATUREID\" = " + " OR \"FEATUREID\" = ".join(map(str, upstream_reaches))
     arcpy.SelectLayerByAttribute_management(catchment_layer, "NEW_SELECTION", sel_string)
     clip = arcpy.Clip_analysis(grid_layer, catchment_layer, temp_file)
-    return [(station_id, area) for station_id, area in arcpy.da.SearchCursor(clip, ["stationID", "SHAPE@AREA"])]
+    grid_props = \
+        [(station_id, area) for station_id, area in arcpy.da.SearchCursor(clip, [grid_id_field, "SHAPE@AREA"])]
+    arcpy.Delete_management(temp_file)
+    return grid_props
 
 
 def write_output(output, outfile):
@@ -30,24 +33,20 @@ def write_output(output, outfile):
 
 
 def main():
-    from paths import grid_file, watershed_file, nhd_dir, grid_props
+    from paths import grid_file, watershed_file, catchment_path, grid_props, grid_id_field
 
     # Loop through sites, sorted by region
     output = [["Site_ID", "Comid", "Dayshed", "Grid_ID", "Grid_Area"]]
     grid_layer = arcpy.MakeFeatureLayer_management(grid_file, "grid_layer")
     for region, sites in get_watersheds(watershed_file):
         print(region)
-        catchment_shapefile = os.path.join(nhd_dir, "NHDPlus{}".format(region), "NHDPlusCatchment", "Catchment.shp")
-        catchment_layer = arcpy.MakeFeatureLayer_management(catchment_shapefile, "catch_layer")
+        catchment_layer = arcpy.MakeFeatureLayer_management(catchment_path.format(region), "catch_layer")
         for site in sites:
             site_id, comid, time = site[:3]
-            if int(time) < 8:
-                print(site_id, time)
-                upstream_reaches = site[3:]
-                for grid_id, area in get_grid_props(grid_layer, catchment_layer, upstream_reaches):
-                    output.append([site_id, comid, time, grid_id, area])
-            else:
-                print("Skipping {}, {} for now".format(site_id, time))
+            upstream_reaches = site[3:]
+            print(site_id, time, len(upstream_reaches))
+            for grid_id, area in get_grid_props(grid_layer, catchment_layer, upstream_reaches, grid_id_field):
+                output.append([site_id, comid, time, grid_id, area])
         arcpy.Delete_management(catchment_layer)
 
     write_output(output, grid_props)

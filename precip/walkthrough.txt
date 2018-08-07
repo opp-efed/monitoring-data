@@ -1,12 +1,18 @@
-Start with a shapefile of sample sites
 
-1. Run characterize_watersheds\0_overlay_points.py. This will overlay the sample sites onto NHD Plus catchments with
+1. Get all required input datasets (weather files, weather file grid, NHD Plus) and make sure paths in paths.py
+point to these files
 
-2. Run precipitation\0_get_watersheds.py using the point/NHD pairs generated in step 1. This identifies all upstream
+2. Create a shapefile from your lat/longs
+
+3. Adjust the 'run id' (can be anything you want) and input shapefile parameters in paths.py
+
+4. Run 0_overlay_points.py. This will overlay the sample sites onto NHD Plus catchments and regions
+
+5. Run 1_get_watersheds.py using the point/NHD pairs generated in step 1. This identifies all upstream
 reaches for each sampling point.
 
-3. Run precipitation\1_watershed_grid.py. This identifies the weather grid cells that overlap the watersheds for each
+6. Run 2_watershed_grid.py. This identifies the weather grid cells that overlap the watersheds for each
 intake location, and the proportion of grid cells that overlap the edges.
 
-4. Run precipitation\2_pull_time_series.py.  This will add up all the precipitation time series for each watershed
+7. Run 3_pull_time_series.py.  This will add up all the precipitation time series for each watershed
 and apply time of travel offsets

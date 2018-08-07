@@ -4,36 +4,31 @@ import numpy as np
 from classes import MetfileMatrix
 
 
+def pull_precip(grid_props, met):
+    site_ids = np.unique(grid_props.Site_ID)
+    columns = [site_id + "_" + field for site_id in site_ids for field in ("uniform", "tot")]
+    all_sites = pd.DataFrame(data=np.zeros((met.n_dates, len(columns))), columns=columns, index=met.dates)
+    for (site_id, dayshed), group in grid_props.groupby(['Site_ID', 'Dayshed']):
+        for _, row in group.iterrows():
+            precip = met.fetch_station(str(row.Grid_ID))[0] * row.Grid_Area
+            all_sites["{}_uniform".format(site_id)] += precip
+            if dayshed > 0:
+                all_sites["{}_tot".format(site_id)][int(dayshed):] += precip[:-int(dayshed)]
+            else:
+                all_sites["{}_tot".format(site_id)] += precip
+    return all_sites
+
+
 def main():
     from paths import metfile_path, grid_props, outfile
 
     met = MetfileMatrix(metfile_path)
 
     grid_props = pd.read_csv(grid_props)
-    all_sites = None
-    for site_id in np.unique(grid_props.Site_ID):
-        print(site_id)
-        site_rows = grid_props[grid_props.Site_ID == site_id]
-        precip_series = np.zeros((2, met.n_dates))
-        site_area = 0
-        for dayshed in np.unique(site_rows.Dayshed):
-            dayshed_rows = site_rows[site_rows.Dayshed == dayshed]
-            for _, row in dayshed_rows.iterrows():
-                site_area += row.Grid_Area
-                precip = met.fetch_station(str(row.Grid_ID))[0] * row.Grid_Area
-                precip_series[0] += precip
-                if dayshed > 0:
-                    precip_series[1][int(dayshed):] += precip[:-int(dayshed)]
-                else:
-                    precip_series[1] += precip
-        labels = ["{}_uniform".format(site_id), "{}_tot".format(site_id)]
-        precip_series = pd.DataFrame(index=labels, data=precip_series)
-        if all_sites is None:
-            all_sites = precip_series
-        else:
-            all_sites = pd.concat([all_sites, precip_series])
 
-    all_sites.to_csv(outfile)
+    precip_series = pull_precip(grid_props, met)
+
+    precip_series.to_csv(outfile)
 
 
 main()

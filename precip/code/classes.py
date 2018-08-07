@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 
 from collections import OrderedDict
 from dbfread import DBF, FieldParser
@@ -110,6 +111,9 @@ class MetfileMatrix(MemoryMatrix):
         # Initialize memory matrix
         super(MetfileMatrix, self).__init__(self.metfiles, self.n_dates, 3, path=self.dir,
                                             base=self.name, input_only=True)
+    @property
+    def dates(self):
+        return pd.date_range(self.start_date, self.end_date)
 
     def load_key(self):
 
