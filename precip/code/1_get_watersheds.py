@@ -11,6 +11,7 @@ def main():
     sites = pd.read_csv(sites_file)
     sites.columns = map(str.lower, sites.columns)
 
+
     # Delineate watersheds and write to output
     with open(watershed_file, 'w') as f:
         for region, sites in sites.groupby('region'):

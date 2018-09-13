@@ -1,4 +1,6 @@
 bin/Sites/*
 bin/Tables/*
 bin/temp/*
+bin/matchup
+matchup
 .idea

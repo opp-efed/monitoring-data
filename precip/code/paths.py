@@ -3,11 +3,11 @@ import os
 #################################################################
 ### Adjust run id and input shapefile for each individual run ###
 #################################################################
-run_id = "cww_june18"
+run_id = "cadillac_test3"
 
 # Shapefile containing the locations of the sample sites and the field containing the site id
-points_file = os.path.join("..", "bin", "Sites", "cws_june18.shp")
-site_id_field = "PWSID"
+points_file = os.path.join("..", "bin", "matchup", "new_points4.shp")
+site_id_field = "FID"
 
 ##################################################################
 
@@ -18,21 +18,21 @@ site_id_field = "PWSID"
 
 # Path containing NHD Plus dataset
 nhd_dir = r"C:\Users\jhook\Documents\NationalData\NHDPlusV2"
-catchment_path = os.path.join(nhd_dir, "NHDPlus{}", "NHDPlusCatchment", "Catchment.shp")
+catchment_path = os.path.join(nhd_dir, "NHDPlus{}", "NHDPlus{}", "NHDPlusCatchment", "Catchment.shp")
 
 # NHD region boundaries
 regions_file = r"C:\Users\jhook\Documents\NationalData\NHD_Regions\all_regions.shp"
 region_id_field = "REGION"
 
 # Location of the weather files
-metfile_path = r"C:\Users\Jhook\Documents\opp-efed\sam\bin\Preprocessed\WeatherFiles\metfile"
+metfile_path = r"C:\Users\Jhook\Documents\opp-efed\aquatic-model-inputs\bin\Production\WeatherFiles\weather_cube"
 
 # Shapefile containing weather file grids
 grid_file = r"C:\Users\jhook\Documents\NationalData\WeatherFiles\weather_stations_highres_thiessens_US_alb\weather_stations_highres_thiessens_US_alb.shp"
 grid_id_field = "stationID"
 
 # Location of the Navigator files used to delineate watersheds
-nav_path = os.path.join(r"C:\Users\jhook\Documents\opp-efed\sam", "bin", "Preprocessed", "HydroFiles")
+nav_path = os.path.join(r"C:\Users\jhook\Documents\opp-efed\aquatic-model-inputs", "bin", "Production", "HydroFiles")
 
 # Scratch workspace
 scratch_workspace = os.path.join("..", "bin", "temp")
